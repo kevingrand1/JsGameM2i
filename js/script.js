@@ -1,5 +1,6 @@
 
 const player = document.getElementById('player');
+const finish = document.getElementById('finish');
 
 const alert = document.getElementById('alert');
 
@@ -107,7 +108,8 @@ function movement(start, newPosition) {
 
         console.log('start : ' + start, 'end : ' + newPosition);
 
-        return document.getElementById(newPosition).appendChild(player);
+        document.getElementById(newPosition).appendChild(player);
+        win();
 
     } else {
 
@@ -115,6 +117,26 @@ function movement(start, newPosition) {
 
         return loose();
     }
+}
+
+function win() {
+    if (player.parentNode === finish.parentNode){
+        while (output.firstChild) {
+            output.removeChild(output.lastChild);
+        }
+        outputs.length = 0;
+        let p = document.createElement("p");
+        p.setAttribute('id', 'alert');
+        let content = document.createTextNode('You win!');
+        p.appendChild(content);
+        output.appendChild(p);
+        buttons.style.display = "none";
+        p.style.display = "block";
+        btnRedo.style.display = "flex";
+    }
+
+
+
 }
 
 function loose() {
@@ -151,7 +173,7 @@ function redo() {
     p.style.display = "none";
     btnRedo.style.display = "none";
 
-    console.clear();
+    window.location.reload();
 }
 
 function getPosition (elem) {
