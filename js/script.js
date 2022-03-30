@@ -31,7 +31,7 @@ btnUp.addEventListener('click',()=>{
 });
 
 btnDown.addEventListener('click',()=>{
-   printer('down')
+    printer('down')
 });
 
 btnRight.addEventListener('click',()=>{
@@ -57,7 +57,12 @@ function printer(elem = '') {
 }
 
 function doMoves(){
-    outputs.forEach( element => move(element));
+    outputs.forEach((element, i) => {
+        setTimeout(() => {
+            move(element);
+        }, i * 700);
+
+    })
     win();
     loose();
     outputs.length = 0;
