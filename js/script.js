@@ -1,5 +1,8 @@
 
+const deck = document.getElementById('deck');
+
 const player = document.getElementById('player');
+const finish = document.getElementById('finish');
 
 const alert = document.getElementById('alert');
 
@@ -18,6 +21,10 @@ const originalPosX = getPosition(player).left + 'px';
 const originalPosY = getPosition(player).top + 'px';
 
 let outputs = [];
+
+randomStart();
+randomFinish();
+
 
 btnUp.addEventListener('click',()=>{
     printer('up')
@@ -51,6 +58,8 @@ function printer(elem = '') {
 
 function doMoves(){
     outputs.forEach( element => move(element));
+    win();
+    loose();
     outputs.length = 0;
 }
 
@@ -105,32 +114,45 @@ function movement(start, newPosition) {
 
     if (!! document.getElementById(newPosition)) {
 
-        console.log('start : ' + start, 'end : ' + newPosition);
-
-        return document.getElementById(newPosition).appendChild(player);
-
-    } else {
-
-        console.log('start : ' + start, 'end : ' + newPosition);
-
-        return loose();
+        document.getElementById(newPosition).appendChild(player);
     }
 }
 
-function loose() {
-    while (output.firstChild) {
-        output.removeChild(output.lastChild);
+function win() {
+    if (player.parentNode === finish.parentNode){
+        while (output.firstChild) {
+            output.removeChild(output.lastChild);
+        }
+        outputs.length = 0;
+        let p = document.createElement("p");
+        p.setAttribute('id', 'alert');
+        let content = document.createTextNode('You win!');
+        p.appendChild(content);
+        output.appendChild(p);
+        buttons.style.display = "none";
+        p.style.display = "block";
+        btnRedo.style.display = "flex";
     }
-    outputs.length = 0;
-    let p = document.createElement("p");
-    p.setAttribute('id', 'alert');
-    let content = document.createTextNode('You loose !');
-    p.appendChild(content);
-    output.appendChild(p);
-    buttons.style.display = "none";
-    p.style.display = "block";
-    btnRedo.style.display = "flex";
 
+
+
+}
+
+function loose() {
+    if (player.parentNode !== finish.parentNode) {
+        while (output.firstChild) {
+            output.removeChild(output.lastChild);
+        }
+        outputs.length = 0;
+        let p = document.createElement("p");
+        p.setAttribute('id', 'alert');
+        let content = document.createTextNode('You loose !');
+        p.appendChild(content);
+        output.appendChild(p);
+        buttons.style.display = "none";
+        p.style.display = "block";
+        btnRedo.style.display = "flex";
+    }
 
 }
 
@@ -151,7 +173,7 @@ function redo() {
     p.style.display = "none";
     btnRedo.style.display = "none";
 
-    console.clear();
+    window.location.reload();
 }
 
 function getPosition (elem) {
@@ -159,7 +181,24 @@ function getPosition (elem) {
     return {top: pos.top, bottom: pos.bottom, left: pos.left, right: pos.right}
 }
 
+function getRandomPosition() {
+    let children = Array.from(deck.children);
+    let ids = children.map(element => {return element.id});
+    let randomIndex = Math.floor(Math.random() * ids.length);
+    let id = ids[randomIndex];
 
+
+    return document.getElementById(id)
+}
+
+function randomStart () {
+    getRandomPosition().appendChild(player);
+}
+
+function randomFinish () {
+
+    getRandomPosition().appendChild(finish);
+}
 
 
 
